@@ -1,11 +1,14 @@
 package com.example.georgemakrakis.lightsensor_example;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,23 +26,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //checking which  sensors are supported in our device
-        SensorManager sMgr = (SensorManager)this.getSystemService(SENSOR_SERVICE);
+        SensorManager sMgr = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> list = sMgr.getSensorList(Sensor.TYPE_ALL);
         Log.d("Sensors supported",list.toString());
 
-        SensorManager sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        float min =  lightSensor.getMaximumRange();
-        sensorManager.registerListener(lightSensorEventListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //choosing the light sensor if supported
+        Sensor lightSensor = sMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sMgr.registerListener(lightSensorEventListener, lightSensor, 2000000);//2 sec sampling - delay
 
-        /*SensorManager sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        if(lightSensor==null)
-        {
-            TextView text = (TextView)findViewById(R.id.backround);
-            text.setBackgroundColor(0xFFFF0000);
-        }*/
     }
+
     SensorEventListener lightSensorEventListener = new SensorEventListener()
     {
         public void onSensorChanged(SensorEvent event)
@@ -47,27 +43,15 @@ public class MainActivity extends AppCompatActivity
             TextView text = (TextView) findViewById(R.id.backround);
             if (event.sensor.getType() == Sensor.TYPE_LIGHT)
             {
-                text.setText(""+event.values[0]);
+                text.setText(""+event.values[0]);//the value of sensor
                 if(event.values[0]<=30.0)
                 {
-                    text.setBackgroundColor(Color.GREEN);//green
+                    text.setBackgroundColor(Color.GREEN);//set green color
                 }
                 else if(event.values[0]>=40.0)
                 {
                     text.setBackgroundColor(Color.RED);//set red color
                 }
-                /*for (int i = 1; i < event.values.length; i++)
-                {
-                    if (event.values[i] == event.values[i - 1])
-                    {
-
-                    }
-                    else
-                    {
-                        t
-                    }
-
-                }*/
             }
         }
 
