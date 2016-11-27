@@ -1,2 +1,2 @@
 # Light_Sensor_Example
-A demo using light sensors in Android devices.
+A demo for a @FOSSAEGEAN workshop, using light sensors in Android devices.
